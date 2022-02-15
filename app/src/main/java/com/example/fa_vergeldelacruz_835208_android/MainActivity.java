@@ -19,7 +19,7 @@ import com.example.fa_vergeldelacruz_835208_android.util.SwipeCallback;
 
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ItemClickListener {
+public class MainActivity extends AppCompatActivity implements ItemClickListener {
 
     private ActivityMainBinding binding;
     private FavoritePlaceRoomDB favoritePlaceRoomDB;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         itemTouchHelper.attachToRecyclerView(rvFavoritePlaces);
     }
     private void addFavoritePlace() {
-        Intent i = new Intent(this, AddFavoritePlaceActivity.class);
+        Intent i = new Intent(this, AddorUpdateFavoritePlaceActivity.class);
         startActivity(i);
     }
     @Override
@@ -65,19 +65,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void loadFavoritePlaces() {
         favoritePlaceList = favoritePlaceRoomDB.favoritePlaceDao().getAllFavoritePlaces();
     }
+    /*
     @Override
     public void onClick(View view) {
         Intent i = new Intent(this, FavoritePlaceMapActivity.class);
         startActivity(i);
     }
+     */
     @Override
     public void onClick(View view, int position) {
         FavoritePlace favoritePlace = favoritePlaceList.get(position);
-        Intent i = new Intent(this, FavoritePlaceMapActivity.class);
+        Intent i = new Intent(this, ViewFavoritePlaceActivity.class);
         i.putExtra("address", favoritePlace.getAddress());
         i.putExtra("latitude", favoritePlace.getLatitude());
         i.putExtra("longitude", favoritePlace.getLongitude());
         i.putExtra("date", DateUtil.convertToDateString(favoritePlace.getDate()));
+        i.putExtra("visited",favoritePlace.isVisited());
         startActivity(i);
     }
 }

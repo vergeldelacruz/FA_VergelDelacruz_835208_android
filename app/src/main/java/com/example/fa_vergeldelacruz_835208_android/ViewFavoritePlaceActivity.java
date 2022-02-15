@@ -1,7 +1,10 @@
 package com.example.fa_vergeldelacruz_835208_android;
 
-import static com.google.android.gms.maps.CameraUpdateFactory.newLatLng;
 import static com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -14,14 +17,11 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
-
-import com.example.fa_vergeldelacruz_835208_android.databinding.ActivityFavoritePlaceMapBinding;
-import com.example.fa_vergeldelacruz_835208_android.util.DateUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -29,27 +29,34 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.example.fa_vergeldelacruz_835208_android.databinding.ActivityViewFavoritePlaceBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class FavoritePlaceMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class ViewFavoritePlaceActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private ActivityFavoritePlaceMapBinding binding;
+    private ActivityViewFavoritePlaceBinding binding;
+
+    private Marker marker;
+    private Location markerLoc;
+    private float distance = 0;
     private String address;
     private double latitude;
     private double longitude;
     private String date;
+    private boolean visited;
 
-    private static final String TAG = "FavoritePlaceMapActivity";
+    private static final String TAG = "AddorUpdateFavoritePlaceActivity";
     private static final int REQUEST_CODE = 1;
     private static final int ZOOM_LEVEL = 14;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -67,18 +74,19 @@ public class FavoritePlaceMapActivity extends FragmentActivity implements OnMapR
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityFavoritePlaceMapBinding.inflate(getLayoutInflater());
+        binding = ActivityViewFavoritePlaceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Intent i = getIntent();
         address = i.getStringExtra("address");
-        latitude = i.getDoubleExtra("latitude",0);
-        longitude = i.getDoubleExtra("longitude",0);
+        latitude = i.getDoubleExtra("latitude", 0);
+        longitude = i.getDoubleExtra("longitude", 0);
         date = i.getStringExtra("date");
+        visited = i.getBooleanExtra("visited", false);
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         // add permissions
-
         permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
         permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
 
@@ -88,12 +96,20 @@ public class FavoritePlaceMapActivity extends FragmentActivity implements OnMapR
                     new String[permissionsToRequest.size()]), REQUEST_CODE);
         }
 
+        binding.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goBackToMain();
+            }
+        });
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-
+    private void goBackToMain() {
+        startActivity(new Intent(this,MainActivity.class));
+    }
     @Override
     protected void onStop() {
         super.onStop();
@@ -124,7 +140,7 @@ public class FavoritePlaceMapActivity extends FragmentActivity implements OnMapR
                     .getErrorDialog(this, errorCode, errorCode, new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
-                            Toast.makeText(FavoritePlaceMapActivity.this, "No Services", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ViewFavoritePlaceActivity.this, "No Services", Toast.LENGTH_SHORT).show();
                         }
                     });
             errorDialog.show();
@@ -165,7 +181,13 @@ public class FavoritePlaceMapActivity extends FragmentActivity implements OnMapR
 
                 if (locationResult != null) {
                     Location location = locationResult.getLastLocation();
-                    Log.i(TAG,String.format("onLocationResult Lat: %s, Lng: %s", location.getLatitude(), location.getLongitude()));
+                    Log.i(TAG,String.format("onLocationResult1 Lat: %s, Lng: %s", location.getLatitude(), location.getLongitude()));
+
+                    if (markerLoc != null) {
+                        distance = location.distanceTo(markerLoc);
+                        Log.i(TAG, String.format("onLocationResult distance %s", distance));
+                        marker.setSnippet(buildSnippet());
+                    }
                 }
             }
         };
@@ -185,7 +207,7 @@ public class FavoritePlaceMapActivity extends FragmentActivity implements OnMapR
 
             if (permissionsRejected.size() > 0 ) {
                 if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
-                    new AlertDialog.Builder(FavoritePlaceMapActivity.this)
+                    new AlertDialog.Builder(ViewFavoritePlaceActivity.this)
                             .setMessage("The location permission is mandatory")
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
@@ -216,16 +238,57 @@ public class FavoritePlaceMapActivity extends FragmentActivity implements OnMapR
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
+        if (latitude != 0) {
+            markerLoc = new Location("Marker");
+            markerLoc.setLatitude(latitude);
+            markerLoc.setLongitude(longitude);
+            LatLng latLng = new LatLng(latitude, longitude);
+            String title = address;
+            if (title.isEmpty()) {
+                title = date;
+            }
+            String markerSnippet = buildSnippet();
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(latitude, longitude);
-        String title = address;
-        if (title.isEmpty()) {
-            title = date;
+            marker = mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title(title)
+                    .snippet(markerSnippet));
+            mMap.moveCamera(newLatLngZoom(latLng, ZOOM_LEVEL));
+
+            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                @Override
+                // Return null here, so that getInfoContents() is called next.
+                public View getInfoWindow(Marker arg0) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+                    // Inflate the layouts for the info window, title and snippet.
+                    View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
+                            (FrameLayout) findViewById(R.id.map), false);
+
+                    TextView title = infoWindow.findViewById(R.id.title);
+                    title.setText(marker.getTitle());
+
+                    TextView snippet = infoWindow.findViewById(R.id.snippet);
+                    snippet.setText(marker.getSnippet());
+
+                    return infoWindow;
+                }
+            });
+
+
         }
-        mMap.addMarker(new MarkerOptions().position(sydney).title(title));
-        mMap.moveCamera(newLatLngZoom(sydney,ZOOM_LEVEL ));
-        //mMap.moveCamera(newLatLng(sydney ));
-
+    }
+    private String buildSnippet() {
+        String markerSnippet = " Latitude: " + latitude;
+        markerSnippet = markerSnippet + "\n Longitude: " + longitude;
+        markerSnippet = markerSnippet + "\n Visited: " +  (visited == true ? "Yes": "No");
+        if (distance > 0) {
+            markerSnippet = markerSnippet + "\n Distance: " + distance + " m";
+        }
+        return markerSnippet;
     }
 }

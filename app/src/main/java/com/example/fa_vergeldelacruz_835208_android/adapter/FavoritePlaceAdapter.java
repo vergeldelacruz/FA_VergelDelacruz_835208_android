@@ -12,10 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Date;
 import java.util.List;
 
-import com.example.fa_vergeldelacruz_835208_android.AddFavoritePlaceActivity;
+import com.example.fa_vergeldelacruz_835208_android.AddorUpdateFavoritePlaceActivity;
 import com.example.fa_vergeldelacruz_835208_android.R;
 import com.example.fa_vergeldelacruz_835208_android.entity.FavoritePlace;
 import com.example.fa_vergeldelacruz_835208_android.util.DateUtil;
@@ -80,7 +79,7 @@ public class FavoritePlaceAdapter extends RecyclerView.Adapter<FavoritePlaceAdap
         favoritePlaceRoomDB.favoritePlaceDao().deleteFavoritePlace(favoritePlace.getId());
         favoritePlaceList.remove(position);
         notifyItemRemoved(position);
-        Toast.makeText(context,"The address is deleted", Toast.LENGTH_LONG).show();
+        Toast.makeText(context,"The place is deleted", Toast.LENGTH_LONG).show();
     }
     /**
      * Starts the Update Favorite Place Activity given the selected position in
@@ -89,7 +88,7 @@ public class FavoritePlaceAdapter extends RecyclerView.Adapter<FavoritePlaceAdap
      */
     public void updateItem(int position) {
         FavoritePlace favoritePlace = favoritePlaceList.get(position);
-        Intent i = new Intent(context, AddFavoritePlaceActivity.class);
+        Intent i = new Intent(context, AddorUpdateFavoritePlaceActivity.class);
         i.putExtra("isEditing", true);
         i.putExtra("id", favoritePlace.getId());
         i.putExtra("address", favoritePlace.getAddress());

@@ -9,4 +9,11 @@
     <string name="cancel_save_favorite_place">Cancel</string>
     <string name="favorite_place_address">Address</string>
     <string name="title_activity_favorite_place_map">FavoritePlaceMapActivity</string>
+    <string name="next">Next</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="title_activity_view_favorite_place">ViewFavoritePlaceActivity</string>
+    <string name="back">Back</string>
+    <string name="search_favorite_place">Enter address</string>
+    <string name="swipe_instructions">Swipe Right to edit or Left to delete</string>
 </resources>

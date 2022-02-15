@@ -16,4 +16,5 @@
     <string name="back">Back</string>
     <string name="search_favorite_place">Enter address</string>
     <string name="swipe_instructions">Swipe Right to edit or Left to delete</string>
+    <string name="add_instructions">Please tap on the map to drop a marker</string>
 </resources>

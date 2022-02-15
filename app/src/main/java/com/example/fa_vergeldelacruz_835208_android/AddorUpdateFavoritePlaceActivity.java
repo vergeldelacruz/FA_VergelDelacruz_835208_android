@@ -102,6 +102,7 @@ public class AddorUpdateFavoritePlaceActivity extends FragmentActivity implement
             binding.etLatitude.setText(String.valueOf(latitude));
             binding.etLongitude.setText(String.valueOf(longitude));
             binding.cbVisited.setChecked(visited);
+            binding.tvInstructions.setText("Please drag the marker to change the location.");
         }
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 

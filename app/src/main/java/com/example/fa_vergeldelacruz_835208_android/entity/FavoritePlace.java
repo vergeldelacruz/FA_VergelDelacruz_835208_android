@@ -11,7 +11,6 @@ public class FavoritePlace {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    @NonNull
     private String address;
     @NonNull
     private Date date;
@@ -23,7 +22,7 @@ public class FavoritePlace {
     private double longitude;
 
 
-    public FavoritePlace(@NonNull String address, @NonNull Date date, double latitude, double longitude, boolean visited ) {
+    public FavoritePlace(String address, @NonNull Date date, double latitude, double longitude, boolean visited ) {
         this.address = address;
         this.date = date;
         this.visited = visited;
@@ -39,12 +38,11 @@ public class FavoritePlace {
         this.id = id;
     }
 
-    @NonNull
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(@NonNull String address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 

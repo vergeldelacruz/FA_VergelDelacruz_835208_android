@@ -9,7 +9,7 @@ import androidx.room.TypeConverters;
 import com.example.fa_vergeldelacruz_835208_android.data.FavoritePlaceDao;
 import com.example.fa_vergeldelacruz_835208_android.entity.FavoritePlace;
 
-@Database(entities = {FavoritePlace.class}, version = 1, exportSchema = false)
+@Database(entities = {FavoritePlace.class}, version = 2, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class FavoritePlaceRoomDB extends RoomDatabase {
 
@@ -22,6 +22,7 @@ public abstract class FavoritePlaceRoomDB extends RoomDatabase {
         if (INSTANCE == null)
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(), FavoritePlaceRoomDB.class, DB_NAME)
                     .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
                     .build();
         return INSTANCE;
     }

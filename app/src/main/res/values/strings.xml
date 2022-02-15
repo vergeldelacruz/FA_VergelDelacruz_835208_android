@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Favorite Place App</string>
+    <string name="add_favorite_place">Add Favorite Place</string>
+    <string name="enter_address">Enter Address</string>
+    <string name="enter_date">Enter Date</string>
+    <string name="enter_latitude">Enter Latitude</string>
+    <string name="enter_longitude">Enter Longitude</string>
+    <string name="save_favorite_place">Save</string>
+    <string name="cancel_save_favorite_place">Cancel</string>
+    <string name="favorite_place_address">Address</string>
+    <string name="title_activity_favorite_place_map">FavoritePlaceMapActivity</string>
+</resources>

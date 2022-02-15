@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.fa_vergeldelacruz_835208_android">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -30,12 +31,13 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".FavoritePlaceMapActivity"
+            android:name=".ViewFavoritePlaceActivity"
+            android:exported="false"
+            android:label="@string/title_activity_view_favorite_place" />
+        <activity
+            android:name=".AddorUpdateFavoritePlaceActivity"
             android:exported="false"
             android:label="@string/title_activity_favorite_place_map" />
-        <activity
-            android:name=".AddFavoritePlaceActivity"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

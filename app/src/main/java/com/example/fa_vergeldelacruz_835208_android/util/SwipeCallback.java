@@ -1,18 +1,12 @@
 package com.example.fa_vergeldelacruz_835208_android.util;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fa_vergeldelacruz_835208_android.AddFavoritePlaceActivity;
 import com.example.fa_vergeldelacruz_835208_android.adapter.FavoritePlaceAdapter;
-import com.example.fa_vergeldelacruz_835208_android.entity.FavoritePlace;
 
 public class SwipeCallback extends ItemTouchHelper.SimpleCallback {
     private FavoritePlaceAdapter favoritePlaceAdapter;

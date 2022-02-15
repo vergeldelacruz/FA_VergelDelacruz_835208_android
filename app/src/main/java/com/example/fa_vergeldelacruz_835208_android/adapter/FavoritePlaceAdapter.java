@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fa_vergeldelacruz_835208_android.R;
 import com.example.fa_vergeldelacruz_835208_android.entity.FavoritePlace;
 import com.example.fa_vergeldelacruz_835208_android.util.FavoritePlaceRoomDB;
+import com.example.fa_vergeldelacruz_835208_android.util.ItemClickListener;
 
 import java.util.List;
 import java.util.Locale;
@@ -92,13 +93,11 @@ public class FavoritePlaceAdapter extends RecyclerView.Adapter<FavoritePlaceAdap
         @Override
         public void onClick(View view) {
             //updateCategory(categoryList.get(getAdapterPosition()));
-             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+             if (mClickListener != null) mClickListener.onClick(view, getAdapterPosition());
         }
     }
-    void setClickListener(ItemClickListener itemClickListener) {
+    public void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
-    }
+
 }

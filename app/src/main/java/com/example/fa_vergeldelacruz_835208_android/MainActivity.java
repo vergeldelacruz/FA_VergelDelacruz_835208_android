@@ -4,21 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewConfiguration;
+import java.util.List;
 
 import com.example.fa_vergeldelacruz_835208_android.adapter.FavoritePlaceAdapter;
 import com.example.fa_vergeldelacruz_835208_android.databinding.ActivityMainBinding;
 import com.example.fa_vergeldelacruz_835208_android.entity.FavoritePlace;
+import com.example.fa_vergeldelacruz_835208_android.util.DateUtil;
 import com.example.fa_vergeldelacruz_835208_android.util.FavoritePlaceRoomDB;
 import com.example.fa_vergeldelacruz_835208_android.util.ItemClickListener;
 import com.example.fa_vergeldelacruz_835208_android.util.SwipeCallback;
 
-import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, ItemClickListener {
 
@@ -52,31 +51,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ItemTouchHelper itemTouchHelper = new
                 ItemTouchHelper(new SwipeCallback(this,favoritePlaceAdapter));
         itemTouchHelper.attachToRecyclerView(rvFavoritePlaces);
-
     }
-
     private void addFavoritePlace() {
         Intent i = new Intent(this, AddFavoritePlaceActivity.class);
         startActivity(i);
     }
-
     @Override
     protected void onRestart() {
         super.onRestart();
         loadFavoritePlaces();
         favoritePlaceAdapter.notifyDataSetChanged();
     }
-
     private void loadFavoritePlaces() {
         favoritePlaceList = favoritePlaceRoomDB.favoritePlaceDao().getAllFavoritePlaces();
     }
     @Override
     public void onClick(View view) {
-        Intent i = new Intent(this,FavoritePlaceMapActivity.class);
+        Intent i = new Intent(this, FavoritePlaceMapActivity.class);
         startActivity(i);
     }
-
-
     @Override
     public void onClick(View view, int position) {
         FavoritePlace favoritePlace = favoritePlaceList.get(position);
@@ -84,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         i.putExtra("address", favoritePlace.getAddress());
         i.putExtra("latitude", favoritePlace.getLatitude());
         i.putExtra("longitude", favoritePlace.getLongitude());
-
+        i.putExtra("date", DateUtil.convertToDateString(favoritePlace.getDate()));
         startActivity(i);
     }
 }

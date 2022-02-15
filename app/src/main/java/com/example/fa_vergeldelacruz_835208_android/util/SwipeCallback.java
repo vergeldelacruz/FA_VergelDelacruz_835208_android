@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fa_vergeldelacruz_835208_android.AddFavoritePlaceActivity;
 import com.example.fa_vergeldelacruz_835208_android.adapter.FavoritePlaceAdapter;
+import com.example.fa_vergeldelacruz_835208_android.entity.FavoritePlace;
 
 public class SwipeCallback extends ItemTouchHelper.SimpleCallback {
     private FavoritePlaceAdapter favoritePlaceAdapter;
@@ -35,16 +36,20 @@ public class SwipeCallback extends ItemTouchHelper.SimpleCallback {
      */
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-       // if (direction == ItemTouchHelper.RIGHT) {
-            int position = viewHolder.getAdapterPosition();
+        int position = viewHolder.getAdapterPosition();
+        if (direction == ItemTouchHelper.RIGHT) {
             favoritePlaceAdapter.deleteItem(position);
-       /*
         } else {
-           // Intent i = new Intent(this, AddFavoritePlaceActivity.class);
-            //startA
+            /*
+            Intent i = new Intent(context, AddFavoritePlaceActivity.class);
+            FavoritePlace favoritePlace = favoritePlaceAdapter.get
+            i.putExtra(id)
+            context.startActivity(i);
+             */
+            favoritePlaceAdapter.updateItem(position);
         }
 
-        */
+
         /*
             AlertDialog.Builder buider = new AlertDialog.Builder(context);
             buider.setTitle("Are you sure ?");

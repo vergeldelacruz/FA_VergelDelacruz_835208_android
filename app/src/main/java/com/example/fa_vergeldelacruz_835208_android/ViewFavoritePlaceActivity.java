@@ -83,7 +83,11 @@ public class ViewFavoritePlaceActivity extends FragmentActivity implements OnMap
         longitude = i.getDoubleExtra("longitude", 0);
         date = i.getStringExtra("date");
         visited = i.getBooleanExtra("visited", false);
-
+        if (address.isEmpty()) {
+            binding.tvAddress.setText(date);
+        } else {
+            binding.tvAddress.setText(address);
+        }
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         // add permissions

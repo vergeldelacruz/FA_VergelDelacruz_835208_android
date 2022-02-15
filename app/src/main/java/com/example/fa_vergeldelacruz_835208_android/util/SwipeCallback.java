@@ -35,13 +35,16 @@ public class SwipeCallback extends ItemTouchHelper.SimpleCallback {
      */
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        if (direction == ItemTouchHelper.LEFT) {
+       // if (direction == ItemTouchHelper.RIGHT) {
             int position = viewHolder.getAdapterPosition();
             favoritePlaceAdapter.deleteItem(position);
+       /*
         } else {
            // Intent i = new Intent(this, AddFavoritePlaceActivity.class);
             //startA
         }
+
+        */
         /*
             AlertDialog.Builder buider = new AlertDialog.Builder(context);
             buider.setTitle("Are you sure ?");

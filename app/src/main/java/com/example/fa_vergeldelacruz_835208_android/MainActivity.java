@@ -15,11 +15,12 @@ import com.example.fa_vergeldelacruz_835208_android.adapter.FavoritePlaceAdapter
 import com.example.fa_vergeldelacruz_835208_android.databinding.ActivityMainBinding;
 import com.example.fa_vergeldelacruz_835208_android.entity.FavoritePlace;
 import com.example.fa_vergeldelacruz_835208_android.util.FavoritePlaceRoomDB;
+import com.example.fa_vergeldelacruz_835208_android.util.ItemClickListener;
 import com.example.fa_vergeldelacruz_835208_android.util.SwipeCallback;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ItemClickListener {
 
     private ActivityMainBinding binding;
     private FavoritePlaceRoomDB favoritePlaceRoomDB;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rvFavoritePlaces = binding.rvFavoritePlaces;
         rvFavoritePlaces.setLayoutManager(new LinearLayoutManager(this));
         favoritePlaceAdapter = new FavoritePlaceAdapter(this, favoritePlaceList);
-        //favoritePlaceAdapter.setClickListener(this);
+        favoritePlaceAdapter.setClickListener(this);
         rvFavoritePlaces.setAdapter(favoritePlaceAdapter);
         //binding.imgBack.setOnClickListener(this);
 
@@ -76,4 +77,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public void onClick(View view, int position) {
+        FavoritePlace favoritePlace = favoritePlaceList.get(position);
+        Intent i = new Intent(this, FavoritePlaceMapActivity.class);
+        i.putExtra("address", favoritePlace.getAddress());
+        i.putExtra("latitude", favoritePlace.getLatitude());
+        i.putExtra("longitude", favoritePlace.getLongitude());
+
+        startActivity(i);
+    }
 }

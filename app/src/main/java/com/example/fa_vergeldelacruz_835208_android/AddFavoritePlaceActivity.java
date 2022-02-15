@@ -34,8 +34,16 @@ public class AddFavoritePlaceActivity extends AppCompatActivity {
                 addFavoritePlace();
             }
         });
+        binding.btnCancelAddFavoritePlace.setOnClickListener (new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goBackToMain();
+            }
+        });
     }
-
+    private void goBackToMain() {
+        startActivity(new Intent(this,MainActivity.class));
+    }
     private void addFavoritePlace() {
         String address = binding.etAddress.getText().toString().trim();
         String date = binding.etDate.getText().toString().trim();
